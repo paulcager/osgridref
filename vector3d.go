@@ -1,4 +1,4 @@
-package osgrid
+package osgridref
 
 import (
 	"fmt"
