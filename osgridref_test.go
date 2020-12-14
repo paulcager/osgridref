@@ -182,9 +182,18 @@ func Example() {
 	// The returned lat/lon could now be pasted into, for example, Google maps:
 	//		https://www.google.com/maps/@50.1026075,-5.5457719,17z
 
+	// Convert the lat, lon back into a grid ref
+	latLon, err := ParseLatLon(fmt.Sprintf("%f,%f", lat, lon), 0, WGS84)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%s\n", latLon.ToOsGridRef().StringNCompact(8))
+
 	// Output:
 	// SW 4676 2854
 	// SW46762854
 	// 146760,28548
 	// 50.1029,-5.5428
+	// SW46762854
 }

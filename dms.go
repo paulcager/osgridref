@@ -19,8 +19,6 @@ import (
  * Latitude/longitude points may be represented as decimal degrees, or subdivided into sexagesimal
  * minutes and seconds. This module provides methods for parsing and representing degrees / minutes
  * / seconds.
- *
- * @module dms
  */
 
 var (
@@ -28,13 +26,7 @@ var (
 	separatorChars = regexp.MustCompile(`[^0-9.]+`)
 )
 
-/**
- * Constrain degrees to range -90..+90 (for latitude); e.g. -91 => -89, 91 => 89.
- *
- * @private
- * @param {number} degrees
- * @returns degrees within range -90..+90.
- */
+ // Wrap90 constrains degrees to range -90..+90 (for latitude); e.g. -91 => -89, 91 => 89.
 func Wrap90(degrees float64) float64 {
 	// avoid rounding due to arithmetic ops if within range
 	if -90 <= degrees && degrees <= 90 {
@@ -55,13 +47,7 @@ func Wrap90(degrees float64) float64 {
 		math.Mod(math.Mod(x-p/4, p)+p, p)-p/2) - a
 }
 
-/**
- * Constrain degrees to range -180..+180 (for longitude); e.g. -181 => 179, 181 => -179.
- *
- * @private
- * @param {number} degrees
- * @returns degrees within range -180..+180.
- */
+// Wrap90 constrains degrees to range -180..+180 (for longitude); e.g. -181 => 179, 181 => -179.
 func Wrap180(degrees float64) float64 {
 	// avoid rounding due to arithmetic ops if within range
 	if -180 <= degrees && degrees <= 180 {
@@ -80,13 +66,7 @@ func Wrap180(degrees float64) float64 {
 	return math.Mod((math.Mod(2*a*x/p-p/2, p))+p, p) - a
 }
 
-/**
- * Constrain degrees to range 0..360 (for bearings); e.g. -1 => 359, 361 => 1.
- *
- * @private
- * @param {number} degrees
- * @returns degrees within range 0..360.
- */
+// Wrap360 constrain degrees to range 0..360 (for bearings); e.g. -1 => 359, 361 => 1.
 func Wrap360(degrees float64) float64 {
 	// avoid rounding due to arithmetic ops if within range
 	if 0 <= degrees && degrees <= 360 {
@@ -112,24 +92,18 @@ func invalid(s string) error {
 	return fmt.Errorf("invalid degree: '%s'", s)
 }
 
-/**
- * Parses string representing degrees/minutes/seconds into numeric degrees.
- *
- * This is very flexible on formats, allowing signed decimal degrees, or deg-min-sec optionally
- * suffixed by compass direction (NSEW); a variety of separators are accepted. Examples -3.62,
- * '3 37 12W', '3°37′12″W'.
- *
- * Thousands/decimal separators must be comma/dot; use Dms.fromLocale to convert locale-specific
- * thousands/decimal separators.
- *
- * @param   {string|number} dms - Degrees or deg/min/sec in variety of formats.
- * @returns {number}        Degrees as decimal number.
- *
- * @example
- *   const lat = Dms.parse('51° 28′ 40.37″ N');
- *   const lon = Dms.parse('000° 00′ 05.29″ W');
- *   const p1 = new LatLon(lat, lon); // 51.4779°N, 000.0015°W
- */
+ // ParseDegrees parses a string representing degrees/minutes/seconds into numeric degrees.
+ //
+ // This is very flexible on formats, allowing signed decimal degrees, or deg-min-sec optionally
+ // suffixed by compass direction (NSEW); a variety of separators are accepted. Examples -3.62,
+ // '3 37 12W', '3°37′12″W'.
+ //
+ // Thousands/decimal separators must be comma/dot; use Dms.fromLocale to convert locale-specific
+ // thousands/decimal separators.
+ //
+ // @example
+ //   lat = ParseDegrees(`51° 28′ 40.37″ N`);
+ //   lon = ParseDegrees(`000° 00′ 05.29″ W`);
 func ParseDegrees(s string) (float64, error) {
 	orig := s
 	s = strings.TrimSpace(s)

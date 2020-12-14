@@ -70,6 +70,7 @@ const (
 	n3 = n * n * n
 )
 
+// OsGridRef represents an Ordnance Survey grid reference.
 type OsGridRef struct {
 	Easting, Northing int
 }
@@ -79,6 +80,9 @@ var (
 	gridRefFormat        = regexp.MustCompile(`^[A-Z]{2}[0-9]+$`)
 )
 
+// ParseOsGridRef parses a string into an OsGridRef.
+// The string may be in comma-separated Easting,Northing format,
+// or with grid letters.
 func ParseOsGridRef(s string) (OsGridRef, error) {
 	s = strings.ReplaceAll(s, " ", "")
 	s = strings.ToUpper(s)
@@ -152,6 +156,8 @@ func (o OsGridRef) assertValid() {
 	}
 }
 
+// ToLatLon converts the OS grid reference to a lat/lon based on the WGS84 datum (i.e. the one normally used
+// in GPS services, or global mapping systems).
 func (o OsGridRef) ToLatLon() (float64, float64) {
 	E := float64(o.Easting)
 	N := float64(o.Northing)
@@ -176,9 +182,9 @@ func (o OsGridRef) ToLatLon() (float64, float64) {
 
 	cosφ := math.Cos(φ)
 	sinφ := math.Sin(φ)
-	ν := a * F0 / math.Sqrt(1-e2*sinφ*sinφ)                // nu = transverse radius of curvature
+	ν := a * F0 / math.Sqrt(1-e2*sinφ*sinφ)                   // nu = transverse radius of curvature
 	ρ := a * F0 * (1 - e2) / math.Pow(1-e2*sinφ*sinφ, 1.5) // rho = meridional radius of curvature
-	η2 := ν/ρ - 1                                          // eta = ?
+	η2 := ν/ρ - 1                                                // eta = ?
 
 	tanφ := math.Tan(φ)
 	tan2φ := tanφ * tanφ
@@ -212,14 +218,19 @@ func (o OsGridRef) ToLatLon() (float64, float64) {
 	return φ, λ
 }
 
+// Equivalent to `StringN(8)`
 func (o OsGridRef) String() string {
 	return o.StringN(8)
 }
 
+// Returns a string representation in the normal grid-letter format, with the requested number of
+// digits in the numeric part. The string will not contain any spaces.
 func (o OsGridRef) StringNCompact(digits int) string {
 	return o.stringN(digits, false)
 }
 
+// Returns a string representation in the normal grid-letter format, with the requested number of
+// digits in the numeric part. The grid letters, easting and northing parts will be separated by spaces.
 func (o OsGridRef) StringN(digits int) string {
 	return o.stringN(digits, true)
 }
@@ -262,6 +273,7 @@ func (o OsGridRef) stringN(digits int, spaces bool) string {
 	return fmt.Sprintf("%s%0*d%0*d", letterPair, digits/2, e, digits/2, n)
 }
 
+// Returns a string representation in Easting,Northing format.
 func (o OsGridRef) NumericString() string {
 	return fmt.Sprintf("%d,%d", o.Easting, o.Northing)
 }
