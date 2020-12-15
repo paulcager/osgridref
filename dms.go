@@ -101,7 +101,7 @@ func invalid(s string) error {
  // Thousands/decimal separators must be comma/dot; use Dms.fromLocale to convert locale-specific
  // thousands/decimal separators.
  //
- // @example
+ // example
  //   lat = ParseDegrees(`51° 28′ 40.37″ N`);
  //   lon = ParseDegrees(`000° 00′ 05.29″ W`);
 func ParseDegrees(s string) (float64, error) {

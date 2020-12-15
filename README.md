@@ -52,9 +52,9 @@ library can be used to perform the conversion.
 <img src="images/grid-letters.png" alt="grid letters" align="right" />
 
 The normal, human-readable representation is two letters followed by two groups of digits,
-for example `SZ 644 874`. The 2 letters define a 100 km by 100 km square. The first group of digits is
-the `eastings` and the second is the `northings`; these digits define a coordinate _within_ the
-100 km square.
+for example `SZ 644 874`. The 2 letters define a 100 km by 100 km square, as in the diagram
+on the right. The first group of digits isthe `eastings` and the second is the `northings`;
+these digits define a coordinate _within_ the 100 km square.
 
 An alternative notation is to omit the grid letters and provide just an `easting` and `northing`
 separated by a comma. In this case these are coordinates relative to the _origin_ of the grid
@@ -79,7 +79,7 @@ Fortunately Chris Veness has already done the hard work of implementing this in 
 just converting grid ref to and from lat/lon). This package is a fairly mechanical translation
 of the Javascript into Golang, without understanding how it works.
 
-I am pleased to sat that I don't understand the mathematics behind any of this.
+I am pleased to say that I don't understand the mathematics behind any of this.
 
 ### Why doesn't the code look like idiomatic Go? ###
 

@@ -53,15 +53,12 @@ var (
 	}
 )
 
-// Datums; with associated ellipsoid, and Helmert transform parameters to convert from WGS-84
+// Datums, with associated ellipsoid, and Helmert transform parameters to convert from WGS-84
 // into given datum.
 //
 // Note that precision of various datums will vary, and WGS-84 (original) is not defined to be
 // accurate to better than ±1 metre. No transformation should be assumed to be accurate to
 // better than a metre, for many datums somewhat less.
-//
-// This is a small sample of commoner datums from a large set of historical datums. I will add
-// new datums on request.
 type Datum struct {
 	Name      string
 	Ellipsoid Ellipseoid
@@ -125,7 +122,7 @@ type LatLonEllipsoidalDatum struct {
 // deg-min-sec (hexagesimal) suffixed by compass direction (NSEW); a variety of separators are
 // accepted. Examples -3.62, '3 37 12W', '3°37′12″W'.
 //
-// @example
+// example
 //   p1 = LatLon.parse('51.47736, 0.0000', 0, OSGB36);
 //   p2 = LatLon.parse('51°28′40″N, 000°00′05″W', 17, WGS84);
 func ParseLatLon(latLon string, height float64, datum Datum) (LatLonEllipsoidalDatum, error) {
@@ -161,9 +158,9 @@ func ParseLatLon(latLon string, height float64, datum Datum) (LatLonEllipsoidalD
 // Converts ‘this’ lat/lon coordinate to new coordinate system.
 //
 // @param   toDatum - Datum this coordinate is to be converted to.
-// @returns {LatLon} This point converted to new datum.
+// returns {LatLon} This point converted to new datum.
 //
-// @example
+// example
 //   pWGS84 = LatLonEllipsoidalDatum{Lat: 51.47788, Lon: -0.00147, Height: 0, Datum: WGS84);
 //   pOSGB = pWGS84.convertDatum(OSGB36); // 51.4773°N, 000.0001°E
 func (l LatLonEllipsoidalDatum) ConvertDatum(toDatum Datum) LatLonEllipsoidalDatum {
@@ -177,8 +174,8 @@ func (l LatLonEllipsoidalDatum) ConvertDatum(toDatum Datum) LatLonEllipsoidalDat
 // Converts ‘this’ point from (geodetic) latitude/longitude coordinates to (geocentric) cartesian
 // (x/y/z) coordinates, based on the same datum.
 //
-// @returns Cartesian point equivalent to lat/lon point, with x, y, z in metres from
-//   earth centre, augmented with reference frame conversion methods and properties.
+// returns Cartesian point equivalent to lat/lon point, with x, y, z in metres from
+// earth centre, augmented with reference frame conversion methods and properties.
 func (l LatLonEllipsoidalDatum) ToCartesian() Cartesian {
 	// x = (ν+h)⋅cosφ⋅cosλ, y = (ν+h)⋅cosφ⋅sinλ, z = (ν⋅(1-e²)+h)⋅sinφ
 	// where ν = a/√(1−e²⋅sinφ⋅sinφ), e² = (a²-b²)/a² or (better conditioned) 2⋅f-f²
@@ -266,8 +263,6 @@ func (l LatLonEllipsoidalDatum) ToOsGridRef() OsGridRef {
 // Cartesian coordinate representing ECEF (earth-centric earth-fixed) point, on a given
 // datum. The datum will identify the primary meridian (for the x-coordinate), and is also
 // useful in transforming to/from geodetic (lat/lon) coordinates.
-//
-///
 type Cartesian struct {
 	X, Y, Z float64
 	Datum   Datum
@@ -279,12 +274,11 @@ type Cartesian struct {
 // Uses Bowring’s (1985) formulation for μm precision in concise form; ‘The accuracy of geodetic
 // latitude and height equations’, B R Bowring, Survey Review vol 28, 218, Oct 1985.
 //
-// @returns Latitude/longitude point defined by cartesian coordinates.
+// returns Latitude/longitude point defined by cartesian coordinates.
 //
-// @example
+// example
 //   c = Cartesian{X: 4027893.924, Y: 307041.993, Z: 4919474.294, WGS84);
 //   p = c.ToLatLon(); // 50.7978°N, 004.3592°E
-///
 func (c Cartesian) ToLatLon() LatLonEllipsoidalDatum {
 	x, y, z := c.X, c.Y, c.Z
 	a, b, f := c.Datum.Ellipsoid.a, c.Datum.Ellipsoid.b, c.Datum.Ellipsoid.f
@@ -324,12 +318,9 @@ func (c Cartesian) ToLatLon() LatLonEllipsoidalDatum {
 
 // Converts ‘this’ cartesian coordinate to new datum using Helmert 7-parameter transformation.
 //
-// @param   toDatum - Datum this coordinate is to be converted to.
-//
-// @example
+// example
 //   c = Cartesian{... ... ..., LatLon.datums.OSGB36}
 //   c.convertDatum(Datums["Irl1975"]);
-///
 func (c Cartesian) ConvertDatum(toDatum Datum) Cartesian {
 	if c.Datum.Name == toDatum.Name {
 		return c
@@ -371,7 +362,7 @@ func (c Cartesian) ConvertDatum(toDatum Datum) Cartesian {
  *
  * @private
  * @param   {number[]} t - Transformation to apply to this coordinate.
- * @returns {Cartesian} Transformed point.
+ * returns {Cartesian} Transformed point.
  */
 func (c Cartesian) applyTransform(t [7]float64) Cartesian {
 	// this point
