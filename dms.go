@@ -69,7 +69,7 @@ func Wrap180(degrees float64) float64 {
 // Wrap360 constrain degrees to range 0..360 (for bearings); e.g. -1 => 359, 361 => 1.
 func Wrap360(degrees float64) float64 {
 	// avoid rounding due to arithmetic ops if within range
-	if 0 <= degrees && degrees <= 360 {
+	if 0 <= degrees && degrees < 360 {
 		return degrees
 	}
 
