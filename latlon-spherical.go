@@ -1,6 +1,5 @@
 package osgridref
 
-import "C"
 import (
     "fmt"
     "math"
