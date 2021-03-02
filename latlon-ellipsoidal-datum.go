@@ -36,7 +36,7 @@ import (
  * @module latlon-ellipsoidal-datum
  */
 
- // Ellipsoid parameters.
+// Ellipsoid parameters.
 type Ellipseoid struct{ a, b, f float64 }
 
 var (
@@ -170,6 +170,9 @@ func (l LatLonEllipsoidalDatum) ConvertDatum(toDatum Datum) LatLonEllipsoidalDat
 
 	return newLatLon
 }
+func (l LatLonEllipsoidalDatum) ToLatLon() LatLon {
+	return LatLon{Lat: l.Lat, Lon: l.Lon}
+}
 
 // Converts ‘this’ point from (geodetic) latitude/longitude coordinates to (geocentric) cartesian
 // (x/y/z) coordinates, based on the same datum.
@@ -219,9 +222,9 @@ func (l LatLonEllipsoidalDatum) ToOsGridRef() OsGridRef {
 
 	cosφ := math.Cos(φ)
 	sinφ := math.Sin(φ)
-	ν := a * F0 / math.Sqrt(1-e2*sinφ*sinφ)                   // nu = transverse radius of curvature
+	ν := a * F0 / math.Sqrt(1-e2*sinφ*sinφ)                // nu = transverse radius of curvature
 	ρ := a * F0 * (1 - e2) / math.Pow(1-e2*sinφ*sinφ, 1.5) // rho = meridional radius of curvature
-	η2 := ν/ρ - 1                                                // eta = ?
+	η2 := ν/ρ - 1                                          // eta = ?
 
 	Ma := (1 + n + (5/4)*n2 + (5/4)*n3) * (φ - φ0)
 	Mb := (3*n + 3*n*n + (21/8)*n3) * math.Sin(φ-φ0) * math.Cos(φ+φ0)
