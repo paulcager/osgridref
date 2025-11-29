@@ -51,7 +51,6 @@ func must(err error) {
 	}
 }
 
-
 func BenchmarkOttoImpl(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := OttoGridToLatLon("TL 44982 57869")

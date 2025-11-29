@@ -123,8 +123,9 @@ type LatLonEllipsoidalDatum struct {
 // accepted. Examples -3.62, '3 37 12W', '3°37′12″W'.
 //
 // example
-//   p1 = LatLon.parse('51.47736, 0.0000', 0, OSGB36);
-//   p2 = LatLon.parse('51°28′40″N, 000°00′05″W', 17, WGS84);
+//
+//	p1 = LatLon.parse('51.47736, 0.0000', 0, OSGB36);
+//	p2 = LatLon.parse('51°28′40″N, 000°00′05″W', 17, WGS84);
 func ParseLatLon(latLon string, height float64, datum Datum) (LatLonEllipsoidalDatum, error) {
 	errMessage := fmt.Errorf("invalid LatLon: '%s'", latLon)
 
@@ -161,8 +162,9 @@ func ParseLatLon(latLon string, height float64, datum Datum) (LatLonEllipsoidalD
 // returns {LatLon} This point converted to new datum.
 //
 // example
-//   pWGS84 = LatLonEllipsoidalDatum{Lat: 51.47788, Lon: -0.00147, Height: 0, Datum: WGS84);
-//   pOSGB = pWGS84.convertDatum(OSGB36); // 51.4773°N, 000.0001°E
+//
+//	pWGS84 = LatLonEllipsoidalDatum{Lat: 51.47788, Lon: -0.00147, Height: 0, Datum: WGS84);
+//	pOSGB = pWGS84.convertDatum(OSGB36); // 51.4773°N, 000.0001°E
 func (l LatLonEllipsoidalDatum) ConvertDatum(toDatum Datum) LatLonEllipsoidalDatum {
 	oldCartesian := l.ToCartesian()                    // convert geodetic to cartesian
 	newCartesian := oldCartesian.ConvertDatum(toDatum) // convert datum
@@ -280,8 +282,9 @@ type Cartesian struct {
 // returns Latitude/longitude point defined by cartesian coordinates.
 //
 // example
-//   c = Cartesian{X: 4027893.924, Y: 307041.993, Z: 4919474.294, WGS84);
-//   p = c.ToLatLon(); // 50.7978°N, 004.3592°E
+//
+//	c = Cartesian{X: 4027893.924, Y: 307041.993, Z: 4919474.294, WGS84);
+//	p = c.ToLatLon(); // 50.7978°N, 004.3592°E
 func (c Cartesian) ToLatLon() LatLonEllipsoidalDatum {
 	x, y, z := c.X, c.Y, c.Z
 	a, b, f := c.Datum.Ellipsoid.a, c.Datum.Ellipsoid.b, c.Datum.Ellipsoid.f
@@ -322,8 +325,9 @@ func (c Cartesian) ToLatLon() LatLonEllipsoidalDatum {
 // Converts ‘this’ cartesian coordinate to new datum using Helmert 7-parameter transformation.
 //
 // example
-//   c = Cartesian{... ... ..., LatLon.datums.OSGB36}
-//   c.convertDatum(Datums["Irl1975"]);
+//
+//	c = Cartesian{... ... ..., LatLon.datums.OSGB36}
+//	c.convertDatum(Datums["Irl1975"]);
 func (c Cartesian) ConvertDatum(toDatum Datum) Cartesian {
 	if c.Datum.Name == toDatum.Name {
 		return c

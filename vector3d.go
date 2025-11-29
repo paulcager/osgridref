@@ -24,7 +24,8 @@ import (
 // Functions return vectors as return results, so that operations can be chained.
 //
 // example
-//   v = v1.cross(v2).dot(v3) // ≡ v1×v2⋅v3
+//
+//	v = v1.cross(v2).dot(v3) // ≡ v1×v2⋅v3
 type Vector3d struct {
 	X, Y, Z float64
 }
@@ -134,9 +135,12 @@ func (v Vector3d) Unit() Vector3d {
 //
 // @param   {Vector3d} v - Vector whose angle is to be determined from ‘this’ vector.
 // @param   {Vector3d} [n] - Plane normal: if supplied, angle is signed +ve if this->v is
-//                     clockwise looking along n, -ve in opposite direction.
+//
+//	clockwise looking along n, -ve in opposite direction.
+//
 // returns {number}   Angle (in radians) between this vector and supplied vector (in range 0..π
-//                     if n not supplied, range -π..+π if n supplied).
+//
+//	if n not supplied, range -π..+π if n supplied).
 func (v Vector3d) AngleTo(other Vector3d, extraPlanar bool, n Vector3d) float64 {
 	// q.v. stackoverflow.com/questions/14066933#answer-16544330, but n·p₁×p₂ is numerically
 	// ill-conditioned, so just calculate sign to apply to |p₁×p₂|
@@ -147,8 +151,8 @@ func (v Vector3d) AngleTo(other Vector3d, extraPlanar bool, n Vector3d) float64 
 		sign = -1.0
 	}
 
-	sinθ := v.Cross(v).Length() * sign
-	cosθ := v.Dot(v)
+	sinθ := v.Cross(other).Length() * sign
+	cosθ := v.Dot(other)
 
 	return math.Atan2(sinθ, cosθ)
 }
@@ -164,7 +168,7 @@ func (v Vector3d) RotateAround(axis Vector3d, angle float64) Vector3d {
 	// en.wikipedia.org/wiki/Rotation_matrix#Rotation_matrix_from_axis_and_angle
 	// en.wikipedia.org/wiki/Quaternions_and_spatial_rotation#Quaternion-derived_rotation_matrix
 	p := v.Unit()
-	a := v.Unit()
+	a := axis.Unit()
 
 	s := math.Sin(θ)
 	c := math.Cos(θ)

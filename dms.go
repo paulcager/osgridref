@@ -26,7 +26,7 @@ var (
 	separatorChars = regexp.MustCompile(`[^0-9.]+`)
 )
 
- // Wrap90 constrains degrees to range -90..+90 (for latitude); e.g. -91 => -89, 91 => 89.
+// Wrap90 constrains degrees to range -90..+90 (for latitude); e.g. -91 => -89, 91 => 89.
 func Wrap90(degrees float64) float64 {
 	// avoid rounding due to arithmetic ops if within range
 	if -90 <= degrees && degrees <= 90 {
@@ -92,18 +92,19 @@ func invalid(s string) error {
 	return fmt.Errorf("invalid degree: '%s'", s)
 }
 
- // ParseDegrees parses a string representing degrees/minutes/seconds into numeric degrees.
- //
- // This is very flexible on formats, allowing signed decimal degrees, or deg-min-sec optionally
- // suffixed by compass direction (NSEW); a variety of separators are accepted. Examples -3.62,
- // '3 37 12W', '3°37′12″W'.
- //
- // Thousands/decimal separators must be comma/dot; use Dms.fromLocale to convert locale-specific
- // thousands/decimal separators.
- //
- // example
- //   lat = ParseDegrees(`51° 28′ 40.37″ N`);
- //   lon = ParseDegrees(`000° 00′ 05.29″ W`);
+// ParseDegrees parses a string representing degrees/minutes/seconds into numeric degrees.
+//
+// This is very flexible on formats, allowing signed decimal degrees, or deg-min-sec optionally
+// suffixed by compass direction (NSEW); a variety of separators are accepted. Examples -3.62,
+// '3 37 12W', '3°37′12″W'.
+//
+// Thousands/decimal separators must be comma/dot; use Dms.fromLocale to convert locale-specific
+// thousands/decimal separators.
+//
+// example
+//
+//	lat = ParseDegrees(`51° 28′ 40.37″ N`);
+//	lon = ParseDegrees(`000° 00′ 05.29″ W`);
 func ParseDegrees(s string) (float64, error) {
 	orig := s
 	s = strings.TrimSpace(s)
@@ -141,7 +142,7 @@ func ParseDegrees(s string) (float64, error) {
 		return 0, invalid(orig)
 	}
 	if dmsParts[len(dmsParts)-1] == "" {
-		dmsParts=dmsParts[:len(dmsParts)-1]
+		dmsParts = dmsParts[:len(dmsParts)-1]
 	}
 	multiplier := 1.0
 	sum := 0.0
@@ -150,7 +151,7 @@ func ParseDegrees(s string) (float64, error) {
 		if err != nil {
 			return 0, invalid(orig)
 		}
-		sum += f *multiplier
+		sum += f * multiplier
 		multiplier /= 60.0
 	}
 

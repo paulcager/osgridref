@@ -1,8 +1,8 @@
 package osgridref
 
 import (
-    "fmt"
-    "math"
+	"fmt"
+	"math"
 )
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
@@ -20,7 +20,6 @@ const (
 	earthRadius           = 6_371_000.0 // Its equatorial radius is 6378 km, but its polar radius is 6357 km
 )
 
-
 /**
  * Library of geodesy functions for operations on a spherical earth model.
  *
@@ -35,9 +34,7 @@ const (
 // note greek letters (e.g. φ, λ, θ) are used for angles in radians to distinguish from angles in
 // degrees (e.g. lat, lon, brng)
 
-
 /* LatLon - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
-
 
 /**
  * Latitude/longitude points on a spherical model earth, and methods for calculating distances,
@@ -46,7 +43,6 @@ const (
 type LatLon struct {
 	Lat, Lon float64
 }
-
 
 /**
  * Returns the distance along the surface of the earth from ‘this’ point to destination point.
@@ -66,25 +62,24 @@ type LatLon struct {
  */
 func (ll LatLon) DistanceTo(point LatLon) float64 {
 
-    // a = sin²(Δφ/2) + cos(φ1)⋅cos(φ2)⋅sin²(Δλ/2)
-    // δ = 2·atan2(√(a), √(1−a))
-    // see mathforum.org/library/drmath/view/51879.html for derivation
+	// a = sin²(Δφ/2) + cos(φ1)⋅cos(φ2)⋅sin²(Δλ/2)
+	// δ = 2·atan2(√(a), √(1−a))
+	// see mathforum.org/library/drmath/view/51879.html for derivation
 
-    R := earthRadius
-    φ1 := ll.Lat * toRadians
-    λ1 := ll.Lon * toRadians
-    φ2 := point.Lat * toRadians
-    λ2 := point.Lon * toRadians
-    Δφ := φ2 - φ1
-    Δλ := λ2 - λ1
+	R := earthRadius
+	φ1 := ll.Lat * toRadians
+	λ1 := ll.Lon * toRadians
+	φ2 := point.Lat * toRadians
+	λ2 := point.Lon * toRadians
+	Δφ := φ2 - φ1
+	Δλ := λ2 - λ1
 
-    a := math.Sin(Δφ/2)*math.Sin(Δφ/2) + math.Cos(φ1)*math.Cos(φ2)*math.Sin(Δλ/2)*math.Sin(Δλ/2)
-    c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
-    d := R * c
+	a := math.Sin(Δφ/2)*math.Sin(Δφ/2) + math.Cos(φ1)*math.Cos(φ2)*math.Sin(Δλ/2)*math.Sin(Δλ/2)
+	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
+	d := R * c
 
-    return d
+	return d
 }
-
 
 /**
  * Returns the initial bearing from ‘this’ point to destination point.
@@ -98,20 +93,20 @@ func (ll LatLon) DistanceTo(point LatLon) float64 {
  *   const b1 = p1.initialBearingTo(p2); // 156.2°
  */
 func (ll LatLon) InitialBearingTo(point LatLon) float64 {
-    // tanθ = sinΔλ⋅cosφ2 / cosφ1⋅sinφ2 − sinφ1⋅cosφ2⋅cosΔλ
-    // see mathforum.org/library/drmath/view/55417.html for derivation
+	// tanθ = sinΔλ⋅cosφ2 / cosφ1⋅sinφ2 − sinφ1⋅cosφ2⋅cosΔλ
+	// see mathforum.org/library/drmath/view/55417.html for derivation
 
-    φ1 := ll.Lat * toRadians
-    φ2 := point.Lat * toRadians
-    Δλ := (point.Lon - ll.Lon) * toRadians
+	φ1 := ll.Lat * toRadians
+	φ2 := point.Lat * toRadians
+	Δλ := (point.Lon - ll.Lon) * toRadians
 
-    x := math.Cos(φ1)*math.Sin(φ2) - math.Sin(φ1)*math.Cos(φ2)*math.Cos(Δλ)
-    y := math.Sin(Δλ) * math.Cos(φ2)
-    θ := math.Atan2(y, x)
+	x := math.Cos(φ1)*math.Sin(φ2) - math.Sin(φ1)*math.Cos(φ2)*math.Cos(Δλ)
+	y := math.Sin(Δλ) * math.Cos(φ2)
+	θ := math.Atan2(y, x)
 
-    bearing := θ* toDegrees
+	bearing := θ * toDegrees
 
-    return Wrap360(bearing)
+	return Wrap360(bearing)
 }
 
 /**
@@ -127,13 +122,12 @@ func (ll LatLon) InitialBearingTo(point LatLon) float64 {
  *   const b2 = p1.finalBearingTo(p2); // 157.9°
  */
 func (ll LatLon) FinalBearingTo(point LatLon) float64 {
-    // get initial bearing from destination point to this point & reverse it by adding 180°
+	// get initial bearing from destination point to this point & reverse it by adding 180°
 
-    bearing := point.InitialBearingTo(ll) + 180
+	bearing := point.InitialBearingTo(ll) + 180
 
-    return Wrap360(bearing)
+	return Wrap360(bearing)
 }
-
 
 /**
  * Returns the midpoint between ‘this’ point and destination point.
@@ -171,7 +165,6 @@ func (ll LatLon) FinalBearingTo(point LatLon) float64 {
 //
 //    return LatLon{Lat: lat, Lon: lon}
 //}
-
 
 /**
  * Returns the point at given fraction between ‘this’ point and given point.
@@ -215,7 +208,6 @@ func (ll LatLon) FinalBearingTo(point LatLon) float64 {
 //return new LatLon(lat, lon);
 //}
 
-
 /**
  * Returns the destination point from ‘this’ point having travelled the given distance on the
  * given initial bearing (bearing normally varies around path followed).
@@ -230,28 +222,27 @@ func (ll LatLon) FinalBearingTo(point LatLon) float64 {
  *   const p2 = p1.destinationPoint(7794, 300.7); // 51.5136°N, 000.0983°W
  */
 func (ll LatLon) DestinationPoint(distance float64, bearing float64) LatLon {
-    // sinφ2 = sinφ1⋅cosδ + cosφ1⋅sinδ⋅cosθ
-    // tanΔλ = sinθ⋅sinδ⋅cosφ1 / cosδ−sinφ1⋅sinφ2
-    // see mathforum.org/library/drmath/view/52049.html for derivation
+	// sinφ2 = sinφ1⋅cosδ + cosφ1⋅sinδ⋅cosθ
+	// tanΔλ = sinθ⋅sinδ⋅cosφ1 / cosδ−sinφ1⋅sinφ2
+	// see mathforum.org/library/drmath/view/52049.html for derivation
 
-    δ := distance / earthRadius // angular distance in radians
-    θ := bearing * toRadians
+	δ := distance / earthRadius // angular distance in radians
+	θ := bearing * toRadians
 
-    φ1 := ll.Lat * toRadians
-    λ1 := ll.Lon * toRadians
+	φ1 := ll.Lat * toRadians
+	λ1 := ll.Lon * toRadians
 
-    sinφ2 := math.Sin(φ1)*math.Cos(δ) + math.Cos(φ1)*math.Sin(δ)*math.Cos(θ)
-    φ2 := math.Asin(sinφ2)
-    y := math.Sin(θ) * math.Sin(δ) * math.Cos(φ1)
-    x := math.Cos(δ) - math.Sin(φ1)*sinφ2
-    λ2 := λ1 + math.Atan2(y, x)
+	sinφ2 := math.Sin(φ1)*math.Cos(δ) + math.Cos(φ1)*math.Sin(δ)*math.Cos(θ)
+	φ2 := math.Asin(sinφ2)
+	y := math.Sin(θ) * math.Sin(δ) * math.Cos(φ1)
+	x := math.Cos(δ) - math.Sin(φ1)*sinφ2
+	λ2 := λ1 + math.Atan2(y, x)
 
-    lat := φ2 * toDegrees
-    lon := λ2 * toDegrees
+	lat := φ2 * toDegrees
+	lon := λ2 * toDegrees
 
-    return LatLon{Lat: lat, Lon: lon}
+	return LatLon{Lat: lat, Lon: lon}
 }
-
 
 /**
  * Returns the point of intersection of two paths defined by point and bearing.
@@ -268,64 +259,63 @@ func (ll LatLon) DestinationPoint(distance float64, bearing float64) LatLon {
  *   const pInt = LatLon.intersection(p1, brng1, p2, brng2); // 50.9078°N, 004.5084°E
  */
 func Intersection(p1 LatLon, brng1 float64, p2 LatLon, brng2 float64) (LatLon, bool) {
-    // see www.edwilliams.org/avform.htm#Intersection
+	// see www.edwilliams.org/avform.htm#Intersection
 
-    φ1, λ1 := p1.Lat*toRadians, p1.Lon*toRadians
-    φ2, λ2 := p2.Lat*toRadians, p2.Lon*toRadians
-    θ13, θ23 := brng1*toRadians, brng2*toRadians
-    Δφ := φ2 - φ1
-    Δλ := λ2 - λ1
+	φ1, λ1 := p1.Lat*toRadians, p1.Lon*toRadians
+	φ2, λ2 := p2.Lat*toRadians, p2.Lon*toRadians
+	θ13, θ23 := brng1*toRadians, brng2*toRadians
+	Δφ := φ2 - φ1
+	Δλ := λ2 - λ1
 
-    // angular distance p1-p2
-    δ12 := 2 * math.Asin(math.Sqrt(math.Sin(Δφ/2)*math.Sin(Δφ/2)+math.Cos(φ1)*math.Cos(φ2)*math.Sin(Δλ/2)*math.Sin(Δλ/2)))
-    if math.Abs(δ12) <= math.SmallestNonzeroFloat64 {
-        return p1, true
-    }
+	// angular distance p1-p2
+	δ12 := 2 * math.Asin(math.Sqrt(math.Sin(Δφ/2)*math.Sin(Δφ/2)+math.Cos(φ1)*math.Cos(φ2)*math.Sin(Δλ/2)*math.Sin(Δλ/2)))
+	if math.Abs(δ12) <= math.SmallestNonzeroFloat64 {
+		return p1, true
+	}
 
-    // initial/final bearings between points
-    cosθa := (math.Sin(φ2) - math.Sin(φ1)*math.Cos(δ12)) / (math.Sin(δ12) * math.Cos(φ1))
-    cosθb := (math.Sin(φ1) - math.Sin(φ2)*math.Cos(δ12)) / (math.Sin(δ12) * math.Cos(φ2))
-    θa := math.Acos(math.Min(math.Max(cosθa, -1), 1)) // protect against rounding errors
-    θb := math.Acos(math.Min(math.Max(cosθb, -1), 1)) // protect against rounding errors
+	// initial/final bearings between points
+	cosθa := (math.Sin(φ2) - math.Sin(φ1)*math.Cos(δ12)) / (math.Sin(δ12) * math.Cos(φ1))
+	cosθb := (math.Sin(φ1) - math.Sin(φ2)*math.Cos(δ12)) / (math.Sin(δ12) * math.Cos(φ2))
+	θa := math.Acos(math.Min(math.Max(cosθa, -1), 1)) // protect against rounding errors
+	θb := math.Acos(math.Min(math.Max(cosθb, -1), 1)) // protect against rounding errors
 
-    θ12 := θa
-    if math.Sin(λ2-λ1) <= 0 {
-        θ12 = 2*π - θa
-    }
+	θ12 := θa
+	if math.Sin(λ2-λ1) <= 0 {
+		θ12 = 2*π - θa
+	}
 
-    θ21 := 2*π - θb
-    if math.Sin(λ2-λ1) <= 0 {
-        θ21 = θb
-    }
+	θ21 := 2*π - θb
+	if math.Sin(λ2-λ1) <= 0 {
+		θ21 = θb
+	}
 
-    α1 := θ13 - θ12 // angle 2-1-3
-    α2 := θ21 - θ23 // angle 1-2-3
+	α1 := θ13 - θ12 // angle 2-1-3
+	α2 := θ21 - θ23 // angle 1-2-3
 
-    if math.Sin(α1) == 0 && math.Sin(α2) == 0 {
-        // infinite intersections
-        return LatLon{}, false
-    }
+	if math.Sin(α1) == 0 && math.Sin(α2) == 0 {
+		// infinite intersections
+		return LatLon{}, false
+	}
 
-    if math.Sin(α1)*math.Sin(α2) < 0 {
-        // ambiguous intersection (antipodal?)
-        return LatLon{}, false
-    }
+	if math.Sin(α1)*math.Sin(α2) < 0 {
+		// ambiguous intersection (antipodal?)
+		return LatLon{}, false
+	}
 
-    cosα3 := -math.Cos(α1)*math.Cos(α2) + math.Sin(α1)*math.Sin(α2)*math.Cos(δ12)
+	cosα3 := -math.Cos(α1)*math.Cos(α2) + math.Sin(α1)*math.Sin(α2)*math.Cos(δ12)
 
-    δ13 := math.Atan2(math.Sin(δ12)*math.Sin(α1)*math.Sin(α2), math.Cos(α2)+math.Cos(α1)*cosα3)
+	δ13 := math.Atan2(math.Sin(δ12)*math.Sin(α1)*math.Sin(α2), math.Cos(α2)+math.Cos(α1)*cosα3)
 
-    φ3 := math.Asin(math.Min(math.Max(math.Sin(φ1)*math.Cos(δ13)+math.Cos(φ1)*math.Sin(δ13)*math.Cos(θ13), -1), 1))
+	φ3 := math.Asin(math.Min(math.Max(math.Sin(φ1)*math.Cos(δ13)+math.Cos(φ1)*math.Sin(δ13)*math.Cos(θ13), -1), 1))
 
-    Δλ13 := math.Atan2(math.Sin(θ13)*math.Sin(δ13)*math.Cos(φ1), math.Cos(δ13)-math.Sin(φ1)*math.Sin(φ3))
-    λ3 := λ1 + Δλ13
+	Δλ13 := math.Atan2(math.Sin(θ13)*math.Sin(δ13)*math.Cos(φ1), math.Cos(δ13)-math.Sin(φ1)*math.Sin(φ3))
+	λ3 := λ1 + Δλ13
 
-    lat := φ3 * toDegrees
-    lon := λ3 * toDegrees
+	lat := φ3 * toDegrees
+	lon := λ3 * toDegrees
 
-    return LatLon{Lat: lat, Lon: lon}, true
+	return LatLon{Lat: lat, Lon: lon}, true
 }
-
 
 ///**
 // * Returns (signed) distance from ‘this’ point to great circle defined by start-point and
@@ -458,7 +448,6 @@ func Intersection(p1 LatLon, brng1 float64, p2 LatLon, brng2 float64) (LatLon, b
 //lon2: Dms.wrap180(lon2),
 //};
 //}
-
 
 ///* Rhumb - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 //
@@ -605,9 +594,7 @@ func Intersection(p1 LatLon, brng1 float64, p2 LatLon, brng2 float64) (LatLon, b
 //return new LatLon(lat, lon);
 //}
 
-
 /* Area - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
 
 /**
  * Calculates the area of a spherical polygon where the sides of the polygon are great circle
@@ -622,67 +609,63 @@ func Intersection(p1 LatLon, brng1 float64, p2 LatLon, brng2 float64) (LatLon, b
  *   const area = LatLon.areaOf(polygon); // 6.18e9 m²
  */
 func AreaOf(polygon []LatLon) float64 {
-    // uses method due to Karney: osgeo-org.1560.x6.nabble.com/Area-of-a-spherical-polygon-td3841625.html;
-    // for each edge of the polygon, tan(E/2) = tan(Δλ/2)·(tan(φ₁/2)+tan(φ₂/2)) / (1+tan(φ₁/2)·tan(φ₂/2))
-    // where E is the spherical excess of the trapezium obtained by extending the edge to the equator
-    // (Karney's method is probably more efficient than the more widely known L’Huilier’s Theorem)
+	// uses method due to Karney: osgeo-org.1560.x6.nabble.com/Area-of-a-spherical-polygon-td3841625.html;
+	// for each edge of the polygon, tan(E/2) = tan(Δλ/2)·(tan(φ₁/2)+tan(φ₂/2)) / (1+tan(φ₁/2)·tan(φ₂/2))
+	// where E is the spherical excess of the trapezium obtained by extending the edge to the equator
+	// (Karney's method is probably more efficient than the more widely known L’Huilier’s Theorem)
 
-    const R = earthRadius
+	const R = earthRadius
 
-    // close polygon so that last point equals first point
-    closed := polygon[0] == polygon[len(polygon)-1]
-    if !closed {
-        polygon = append(polygon, polygon[0])
-    }
-    nVertices := len(polygon) - 1
+	// close polygon so that last point equals first point
+	closed := polygon[0] == polygon[len(polygon)-1]
+	if !closed {
+		polygon = append(polygon, polygon[0])
+	}
+	nVertices := len(polygon) - 1
 
-    var S float64 // spherical excess in steradians
-    for v := 0; v < nVertices; v++ {
-        φ1 := polygon[v].Lat * toRadians
-        φ2 := polygon[v+1].Lat * toRadians
-        Δλ := (polygon[v+1].Lon - polygon[v].Lon) * toRadians
-        E := 2 * math.Atan2(math.Tan(Δλ/2)*(math.Tan(φ1/2)+math.Tan(φ2/2)), 1+math.Tan(φ1/2)*math.Tan(φ2/2))
-        S += E
-    }
+	var S float64 // spherical excess in steradians
+	for v := 0; v < nVertices; v++ {
+		φ1 := polygon[v].Lat * toRadians
+		φ2 := polygon[v+1].Lat * toRadians
+		Δλ := (polygon[v+1].Lon - polygon[v].Lon) * toRadians
+		E := 2 * math.Atan2(math.Tan(Δλ/2)*(math.Tan(φ1/2)+math.Tan(φ2/2)), 1+math.Tan(φ1/2)*math.Tan(φ2/2))
+		S += E
+	}
 
-    if isPoleEnclosedBy(polygon) {
-        S = math.Abs(S) - 2*π
-    }
+	if isPoleEnclosedBy(polygon) {
+		S = math.Abs(S) - 2*π
+	}
 
-    A := math.Abs(S * R * R) // area in units of R
+	A := math.Abs(S * R * R) // area in units of R
 
-    if !closed {
-        polygon = polygon[:len(polygon)-1]
-    }
+	if !closed {
+		polygon = polygon[:len(polygon)-1]
+	}
 
-    return A
+	return A
 }
 
 // returns whether polygon encloses pole: sum of course deltas around pole is 0° rather than
 // normal ±360°: blog.element84.com/determining-if-a-spherical-polygon-contains-a-pole.html
 func isPoleEnclosedBy(p []LatLon) bool {
-    // TODO: any better test than this?
-    ΣΔ := 0.0
-    prevBrng := p[0].InitialBearingTo(p[1])
-    for v := 0; v < len(p)-1; v++ {
-        initBrng := p[v].InitialBearingTo(p[v+1])
-        finalBrng := p[v].FinalBearingTo(p[v+1])
-        ΣΔ += math.Mod(initBrng-prevBrng+540, 360) - 180
-        ΣΔ += math.Mod(finalBrng-initBrng+540,360) - 180
-        prevBrng = finalBrng
-    }
-    initBrng := p[0].InitialBearingTo(p[1])
-    ΣΔ += float64(int(initBrng-prevBrng+540)%360 - 180)
-    // TODO: fix (intermittant) edge crossing pole - eg (85,90), (85,0), (85,-90)
-    enclosed := math.Abs(ΣΔ) < 90 // 0°-ish
-    return enclosed
+	// TODO: any better test than this?
+	ΣΔ := 0.0
+	prevBrng := p[0].InitialBearingTo(p[1])
+	for v := 0; v < len(p)-1; v++ {
+		initBrng := p[v].InitialBearingTo(p[v+1])
+		finalBrng := p[v].FinalBearingTo(p[v+1])
+		ΣΔ += math.Mod(initBrng-prevBrng+540, 360) - 180
+		ΣΔ += math.Mod(finalBrng-initBrng+540, 360) - 180
+		prevBrng = finalBrng
+	}
+	initBrng := p[0].InitialBearingTo(p[1])
+	ΣΔ += math.Mod(initBrng-prevBrng+540, 360) - 180
+	// TODO: fix (intermittant) edge crossing pole - eg (85,90), (85,0), (85,-90)
+	enclosed := math.Abs(ΣΔ) < 90 // 0°-ish
+	return enclosed
 }
 
-
-
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
-
-
 
 /**
  * Returns a string representation of ‘this’ point, formatted as degrees, degrees+minutes, or
@@ -699,7 +682,8 @@ func isPoleEnclosedBy(p []LatLon) bool {
  *   const dms = greenwich.toString('dms', 2);              // 51°28′40.37″N, 000°00′05.29″W
  *   const [lat, lon] = greenwich.toString('n').split(','); // 51.4779, -0.0015
  */
-func (ll LatLon)String() string {
-    return fmt.Sprintf("%f,%f", ll.Lat, ll.Lon)
+func (ll LatLon) String() string {
+	return fmt.Sprintf("%f,%f", ll.Lat, ll.Lon)
 }
+
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */

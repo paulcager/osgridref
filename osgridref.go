@@ -182,9 +182,9 @@ func (o OsGridRef) ToLatLon() (float64, float64) {
 
 	cosφ := math.Cos(φ)
 	sinφ := math.Sin(φ)
-	ν := a * F0 / math.Sqrt(1-e2*sinφ*sinφ)                   // nu = transverse radius of curvature
+	ν := a * F0 / math.Sqrt(1-e2*sinφ*sinφ)                // nu = transverse radius of curvature
 	ρ := a * F0 * (1 - e2) / math.Pow(1-e2*sinφ*sinφ, 1.5) // rho = meridional radius of curvature
-	η2 := ν/ρ - 1                                                // eta = ?
+	η2 := ν/ρ - 1                                          // eta = ?
 
 	tanφ := math.Tan(φ)
 	tan2φ := tanφ * tanφ

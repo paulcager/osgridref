@@ -711,7 +711,7 @@ func (ll LatLon) IsEnclosedBy(polygon []LatLon) bool {
 	// close the polygon so that the last point equals the first point
 	closed := polygon[0] == polygon[len(polygon)-1]
 	if !closed {
-		newPoly := make([]LatLon, len(polygon) + 1)
+		newPoly := make([]LatLon, len(polygon)+1)
 		copy(newPoly, polygon)
 		newPoly[len(newPoly)-1] = newPoly[0]
 		polygon = newPoly
@@ -724,7 +724,7 @@ func (ll LatLon) IsEnclosedBy(polygon []LatLon) bool {
 	// get vectors from p to each vertex
 	vectorToVertex := make([]NvectorSpherical, nVertices)
 	for v := 0; v < nVertices; v++ {
-		vectorToVertex[v] =  NvectorSpherical(Vector3d(p).Minus(Vector3d(polygon[v].toNVector())))
+		vectorToVertex[v] = NvectorSpherical(Vector3d(p).Minus(Vector3d(polygon[v].toNVector())))
 	}
 	vectorToVertex = append(vectorToVertex, vectorToVertex[0])
 
@@ -891,8 +891,7 @@ func (ll LatLon) IsEnclosedBy(polygon []LatLon) bool {
 *
 * @extends Vector3d
  */
-type NvectorSpherical 	Vector3d
-
+type NvectorSpherical Vector3d
 
 // note commonality with latlon-nvector-ellipsoidal
 

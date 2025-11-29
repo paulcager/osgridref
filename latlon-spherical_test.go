@@ -1,10 +1,11 @@
 package osgridref
 
 import (
-	"github.com/stretchr/testify/require"
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/stretchr/testify/assert"
 )
